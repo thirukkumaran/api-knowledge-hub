@@ -1,0 +1,11 @@
+venv
+myenv
+.env
+__pycache__/
+.idea
+.git
+.streamlit/*.toml
+*.pkl
+*.log
+*.pem
+*.db
