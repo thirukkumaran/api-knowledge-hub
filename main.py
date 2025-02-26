@@ -31,8 +31,8 @@ ROLE_QUESTIONS = {
         "What tools can help me develop APIs more efficiently?"
     ],
     "I'm an API Designer": [
-        "What are the latest API design standards?",
-        "Generate OpenAPI Specs with the latest standards and best practices?",
+        "What are the API design standards to comply with?",
+        "Generate OpenAPI Specs with standards and best practices?",
         "How can I create clear and consistent API documentation?",
         "What are the best practices for API naming conventions?",
         "How do I design APIs that are easy to understand and use?"
