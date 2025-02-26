@@ -84,7 +84,7 @@ def generate_ai_response(question, role):
     """Generate AI response using OpenAI API"""
     try:
         response = client.chat.completions.create(
-            model="gpt-4.5-turbo",
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": f"You are an expert AI assistant specializing in APIs, focusing on the perspective of a {role}. Provide a comprehensive, detailed, and actionable response."},
                 {"role": "user", "content": question}
