@@ -159,9 +159,13 @@ def main():
     
     st.sidebar.markdown("### API Design Standards")
     st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/api-governance-model/pages/3-api-design" class="sidebar-link" target="_blank">Design Best Practices</a>', unsafe_allow_html=True)
+    st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/api-governance-model/pages/6-versioning" class="sidebar-link" target="_blank">Versioning</a>', unsafe_allow_html=True)
 
     st.sidebar.markdown("### API Security")
     st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/api-governance-model/pages/4-security" class="sidebar-link" target="_blank">Security Best Practices</a>', unsafe_allow_html=True)
+
+    st.sidebar.markdown("### API Testing")
+    st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/api-governance-model/pages/5-testing" class="sidebar-link" target="_blank">API Testing</a>', unsafe_allow_html=True)
 
     st.sidebar.markdown("### API Tools")
     st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/data-provisioning-standards-dps-linter/" class="sidebar-link" target="_blank">API Linter</a>', unsafe_allow_html=True)
