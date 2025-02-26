@@ -1,157 +1,92 @@
-import hmac
-import json
-import openai
-import os
 import streamlit as st
-import yaml
 
-from dotenv import load_dotenv
-from typing import Any, Callable
-from validator.api_standards_and_governance import validate_api_spec as validate_api_standards_and_governance
-from validator.models import RequestModel, Report, ResponseModel
-from validator.openapi_standard import validate_api_spec as validate_openapi_standard
+# Set page configuration
+st.set_page_config(page_title="API Knowledge Hub", layout="wide")
 
-def check_password():
-    """Returns `True` if the user had the correct password."""
+# Custom CSS for styling
+st.markdown("""
+    <style>
+    /* Center the main title */
+    .centered-title {
+        text-align: center;
+        color: #2E86C1;
+    }
 
-    def password_entered():
-        """Checks whether a password entered by the user is correct."""
-        if hmac.compare_digest(st.session_state["password"], st.secrets["password"]):
-            st.session_state["password_correct"] = True
-            del st.session_state["password"]  # Don't store the password.
-        else:
-            st.session_state["password_correct"] = False
+    /* Style the sidebar */
+    .sidebar .sidebar-content {
+        background-color: #F4F6F6;
+        padding: 20px;
+    }
 
-    # Return True if the password is validated.
-    if st.session_state.get("password_correct", False):
-        return True
+    /* Style for buttons */
+    .stButton button {
+        background-color: #2E86C1;
+        color: white;
+        padding: 10px 20px;
+        margin: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    .stButton button:hover {
+        background-color: #1A5276;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
-    # Show input for password.
-    st.text_input(
-        "Password", type="password", on_change=password_entered, key="password"
-    )
-    if "password_correct" in st.session_state:
-        st.error("😕 Password incorrect")
-    return False
+# Sidebar navigation
+menu_options = [
+    ("[API Chatbot](https://api-specs-validator.streamlit.app/aibot)", "AI-powered assistant to help you understand and ask questions related to API Strategy, Life Cycle and Development"),
+    ("[API Linter](https://dps-linter-beta.app.airbase.sg/)", "Automated tool to validate and enforce API design standards and best practices"),
+    ("[OpenAPI Templates](https://docs.developer.tech.gov.sg/docs/data-provisioning-standards-dps-linter/)", "Pre-configured OpenAPI specification templates to jumpstart your API design"),
+    ("[Feedback](https://docs.developer.tech.gov.sg/docs/data-provisioning-standards-dps-linter/)", "Share your feedback and help us improve")
+]
+
+# Render sidebar menu with tooltips
+for link, tooltip in menu_options:
+    st.sidebar.markdown(link, help=tooltip, unsafe_allow_html=True)
 
 
-if not check_password():
-    st.stop()  # Do not continue if check_password is not True.
+# Main content based on sidebar selection
+st.markdown("<h1 class='left-title'>API Knowledge Hub</h1>", unsafe_allow_html=True)
 
-with st.expander('Disclaimer'):
-    st.write('''
-**IMPORTANT NOTICE**: This web application is developed as a proof-of-concept prototype. The information provided here is **NOT intended for actual usage** and should not be relied upon for making any decisions, especially those related to financial, legal, or healthcare matters.
+# User roles and descriptions
+roles = {
+    "I'm an API Consumer": "I want to integrate my application with existing APIs and accelerate the integration process.",
+    "I'm an API Developer": "New to API development and want to understand the tools available to speed up development.",
+    "I'm an API Designer": "Would like to learn about API standards to include in my designs and the tools available.",
+    "I'm a Tech Lead": "Want to understand the API lifecycle from development to deployment, along with the tools that support it.",
+    "I'm a Product Manager": "Want to understand API strategy and how to apply it in product development.",
+    "I'm a Security Engineer": "Want to understand API security best practices and tools to ensure compliance and protection.",
+    "I'm an API Tester": "Would like to explore API testing tools and automation techniques.",
+}
 
-**Furthermore, please be aware that the LLM may generate inaccurate or incorrect information. You assume full responsibility for how you use any generated output.**
-
-Always consult with qualified professionals for accurate and personalized advice.
-''')
-
-# Load environment variables and set up OpenAI API key
-load_dotenv('.env')
-# openai.api_key = os.getenv('OPENAI_API_KEY')
-
-os.environ['CURL_CA_BUNDLE'] = ''  # Ensure SSL handling if needed
-
-# Function to handle AIbot interactions using ChatCompletion
-def interact_with_bot(user_input):
-    messages = [
-        {"role": "system", "content": "You are a helpful assistant skilled in API validation and documentation."},
-        {"role": "user", "content": user_input}
-    ]
-
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",  # Use the appropriate model name based on your API subscription
-        messages=messages,
-        verify=False  # Disable SSL verification
-    )
-    return response.choices[0].message['content'].strip()
-
-def renderReportInMarkdown(report: Report):
-    st.markdown(
-        """
-        <style>
-        .normal {
-            padding: 1.5rem;
-            margin: 1rem 0;
-            border-radius: 10px;
-            background-color: #f4f4f4;
-            border: 1px solid #ddd;
-        }
-        .highlight {
-            padding: 1.5rem;
-            margin: 1rem 0;
-            border-radius: 10px;
-            background-color: #e1f5fe;
-            border: 1px solid #ddd;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
-    st.markdown(header(report.name, 1))
-    for section in report.sections:
-        st.markdown(header(section.id, 3) + ' ' + section.name)
-        for rule in section.rules:
-            if rule.humanReview:
-                card(rule.rule, rule.recommendation, "normal")
-            else:
-                card(rule.rule, rule.recommendation, "highlight")
-
-def header(s: str, n: int) -> str:
-    return '#'*n + ' ' + s
-
-def card(rule: str, recommendation: str, style: str) -> None:
-    st.markdown(
-        f'''
-        <div class="{style}">
-            <h4>{rule}</h4>
-            {recommendation}
-        </div>
-        ''',
-        unsafe_allow_html=True
-    )
-class Option:
-    def __init__(self, name, validator: Callable[[Any], ResponseModel]):
-        self.name = name
-        self.validator = validator
-        self.checked = False
-
-st.title("API Spec Validator")
-
-options: list[Option] = []
-options.append(Option("OpenAPI Standard", validate_openapi_standard))
-options.append(Option("API Standard and Governance", validate_api_standards_and_governance))
-
-# File upload section
-uploaded_file = st.file_uploader("Upload your API Spec (JSON or YAML)", type=["json", "yaml"])
-if uploaded_file:
-    # Load the file and perform validation
-    try:
-        if uploaded_file.name.endswith(".json"):
-            req = RequestModel("json", json.load(uploaded_file))
-        else:
-            req = RequestModel("yaml", yaml.safe_load(uploaded_file))
-
-        st.subheader("Generate report for the following:")
-
-        tabNames: list[str] = []
-        for i in range(len(options)):
-            options[i].checked = st.checkbox(options[i].name, True)
-            if options[i].checked:
-                tabNames.append(options[i].name)
-
-        if 0 < len(tabNames):
-            t = st.tabs(tabNames)
-            ci = 0
-            for i in range(len(options)):
-                if options[i].checked:
-                    with t[ci]:
-                        with st.spinner('Generating report...'):
-                            response = options[ci].validator(req)
-                        renderReportInMarkdown(response.report)
-                    ci += 1
-
-    except Exception as e:
-        st.error(f"Error processing the file: {str(e)}")
+# Display user roles as clickable buttons
+for role, description in roles.items():
+    if st.button(role):
+        st.write(f"**Role:** {description}")
+        
+        # Provide relevant links based on the selected role
+        if role == "I'm an API Developer":
+            st.markdown("<a href='https://docs.developer.tech.gov.sg/docs/data-provisioning-standards-dps-linter/'>Generate Server Stub from OpenAPI Spec</a>", unsafe_allow_html=True)
+            st.markdown("<a href='https://example.com/api-design-tools'>API Testing Tools</a>", unsafe_allow_html=True)
+        elif role == "I'm an API Designer":
+            st.markdown("<a href='https://example.com/api-design-standards'>API Design Standards</a>", unsafe_allow_html=True)
+            st.markdown("<a href='https://example.com/api-design-tools'>API Design Tools</a>", unsafe_allow_html=True)
+        elif role == "I'm a Tech Lead":
+            st.markdown("<a href='https://example.com/api-lifecycle'>API Life Cycle</a>", unsafe_allow_html=True)
+            st.markdown("<a href='https://example.com/api-management-tools'>API Deployment and Management Tools</a>", unsafe_allow_html=True)
+        elif role == "I'm a Product Manager":
+            st.markdown("<a href='https://example.com/api-strategy'>API Strategy</a>", unsafe_allow_html=True)
+            st.markdown("<a href='https://example.com/api-product-development'>API Product Development</a>", unsafe_allow_html=True)
+        elif role == "I'm an API Tester":
+            st.markdown("<a href='https://example.com/api-testing-tools'>API Testing Tools</a>", unsafe_allow_html=True)
+            st.markdown("<a href='https://example.com/api-automation'>API Automation</a>", unsafe_allow_html=True)
+        elif role == "I'm a Security Engineer":
+            st.markdown("<a href='https://example.com/api-security'>API Security Best Practices</a>", unsafe_allow_html=True)
+            st.markdown("<a href='https://example.com/api-compliance'>API Compliance Tools</a>", unsafe_allow_html=True)
+        elif role == "I'm an API Consumer":     
+            st.markdown("<a href='https://example.com/api-testing'>Quickly Testing APIs with Postman and Curl</a>", unsafe_allow_html=True)
+            st.markdown("<a href='https://example.com/api-sdk'>Using SDKs and API Clients for Faster Integration</a>", unsafe_allow_html=True)
+            
