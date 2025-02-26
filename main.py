@@ -23,9 +23,8 @@ ROLE_QUESTIONS = {
         "How can I ensure my API integration is secure?"
     ],
     "I'm an API Developer": [
-        "What are the latest API design standards?",
-        "Generate OpenAPI Specs with the latest standards and best practices?",
-        "Update OpenAPI Specs with the latest standards and best practices?",
+        "What are the tools available to accelerate API development?",
+        "Generate OpenAPI Specs with Standards and best practices?",
         "How can I create scalable and performant APIs?",
         "What are the best practices for API versioning?",
         "How do I implement proper error handling in APIs?",
@@ -34,7 +33,6 @@ ROLE_QUESTIONS = {
     "I'm an API Designer": [
         "What are the latest API design standards?",
         "Generate OpenAPI Specs with the latest standards and best practices?",
-        "Update OpenAPI Specs with the latest standards and best practices?",
         "How can I create clear and consistent API documentation?",
         "What are the best practices for API naming conventions?",
         "How do I design APIs that are easy to understand and use?"
