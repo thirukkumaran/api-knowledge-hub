@@ -1,92 +1,231 @@
 import streamlit as st
+from openai import OpenAI
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Set page configuration
-st.set_page_config(page_title="API Knowledge Hub", layout="wide")
+st.set_page_config(
+    page_title="API Knowledge Hub",
+    page_icon="🚀",
+    layout="wide"
+)
 
-# Custom CSS for styling
-st.markdown("""
+# Role-based  questions
+ROLE_QUESTIONS = {
+    "I'm an API Consumer": [
+        "How can I quickly integrate a new API into my application?",
+        "What are the best practices for API authentication?",
+        "How do I handle API rate limits effectively?",
+        "What tools can help me test and debug API integrations?",
+        "How can I ensure my API integration is secure?"
+    ],
+    "I'm an API Developer": [
+        "What are the latest API design standards?",
+        "How can I create scalable and performant APIs?",
+        "What are the best practices for API versioning?",
+        "How do I implement proper error handling in APIs?",
+        "What tools can help me develop APIs more efficiently?"
+    ],
+    "I'm an API Designer": [
+        "How do I design RESTful APIs effectively?",
+        "What are the key principles of API design?",
+        "How can I create clear and consistent API documentation?",
+        "What are the best practices for API naming conventions?",
+        "How do I design APIs that are easy to understand and use?"
+    ],
+    "I'm a Tech Lead": [
+        "How can I manage the entire API lifecycle?",
+        "What strategies ensure API governance across teams?",
+        "How do I balance innovation with API standardization?",
+        "What metrics should I track for API performance?",
+        "How can I implement an effective API strategy?"
+    ],
+    "I'm a Product Manager": [
+        "How do APIs drive product innovation?",
+        "What are the key considerations for API product development?",
+        "How can APIs create new revenue streams?",
+        "What makes a successful API product?",
+        "How do I prioritize API features?"
+    ],
+    "I'm a Security Engineer": [
+        "What are the top API security vulnerabilities?",
+        "How can I implement robust API authentication?",
+        "What are best practices for API security?",
+        "How do I protect against common API attacks?",
+        "What tools help in API security testing?"
+    ],
+    "I'm an API Tester": [
+        "What are the best strategies for API testing?",
+        "How can I automate API testing?",
+        "What tools are essential for API testing?",
+        "How do I create comprehensive API test cases?",
+        "How can I simulate different API scenarios?"
+    ]
+}
+
+
+
+# Load environment variables
+load_dotenv()
+
+# Get API key with error checking
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+if not OPENAI_API_KEY:
+    st.error("OpenAI API key not found. Please check your .env file.")
+    st.stop()
+
+# Initialize OpenAI client
+client = OpenAI(api_key=OPENAI_API_KEY)
+
+def generate_ai_response(question, role):
+    """Generate AI response using OpenAI API"""
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4.5-turbo",
+            messages=[
+                {"role": "system", "content": f"You are an expert AI assistant specializing in APIs, focusing on the perspective of a {role}. Provide a comprehensive, detailed, and actionable response."},
+                {"role": "user", "content": question}
+            ],
+            max_tokens=500
+        )
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        return f"Error generating response: {str(e)}"
+
+def main():
+    # Custom CSS for enhanced styling
+    st.markdown("""
     <style>
-    /* Center the main title */
-    .centered-title {
+    .main-title {
+        font-size: 2.5em;
+        color: #2C3E50;
         text-align: center;
-        color: #2E86C1;
+        margin-bottom: 20px;
     }
-
-    /* Style the sidebar */
-    .sidebar .sidebar-content {
-        background-color: #F4F6F6;
+    .role-title {
+        color: #3498DB;
+        font-weight: bold;
+    }
+    .insights-box {
+        background-color: #F4F6F7;
+        border-radius: 10px;
         padding: 20px;
+        margin-top: 20px;
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        max-height: 300px;
+        overflow-y: auto;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        z-index: 1000;
     }
-
-    /* Style for buttons */
+    .sidebar-title {
+        color: #2C3E50;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    .sidebar-link {
+        color: #3498DB;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    .sidebar-link:hover {
+        color: #2980B9;
+        text-decoration: underline;
+    }
     .stButton button {
-        background-color: #2E86C1;
+        background-color: #3498DB;
         color: white;
-        padding: 10px 20px;
-        margin: 10px;
         border: none;
+        padding: 10px 20px;
         border-radius: 5px;
-        cursor: pointer;
-        font-size: 16px;
+        transition: background-color 0.3s ease;
     }
     .stButton button:hover {
-        background-color: #1A5276;
+        background-color: #2980B9;
     }
     </style>
     """, unsafe_allow_html=True)
 
-# Sidebar navigation
-menu_options = [
-    ("[API Chatbot](https://api-specs-validator.streamlit.app/aibot)", "AI-powered assistant to help you understand and ask questions related to API Strategy, Life Cycle and Development"),
-    ("[API Linter](https://dps-linter-beta.app.airbase.sg/)", "Automated tool to validate and enforce API design standards and best practices"),
-    ("[OpenAPI Templates](https://docs.developer.tech.gov.sg/docs/data-provisioning-standards-dps-linter/)", "Pre-configured OpenAPI specification templates to jumpstart your API design"),
-    ("[Feedback](https://docs.developer.tech.gov.sg/docs/data-provisioning-standards-dps-linter/)", "Share your feedback and help us improve")
-]
+    # Sidebar for API Lifecycle and Standards
+    st.sidebar.markdown('<div class="sidebar-title">🔍 API Resources</div>', unsafe_allow_html=True)
+    st.sidebar.markdown("### API Lifecycle")
+    st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/api-governance-model/pages/8-lifecycle" class="sidebar-link" target="_blank">Lifecycle Stages</a>', unsafe_allow_html=True)
+    
+    st.sidebar.markdown("### API Design Standards")
+    st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/api-governance-model/pages/3-api-design" class="sidebar-link" target="_blank">Design Best Practices</a>', unsafe_allow_html=True)
 
-# Render sidebar menu with tooltips
-for link, tooltip in menu_options:
-    st.sidebar.markdown(link, help=tooltip, unsafe_allow_html=True)
+    st.sidebar.markdown("### API Security")
+    st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/api-governance-model/pages/4-security" class="sidebar-link" target="_blank">Security Best Practices</a>', unsafe_allow_html=True)
 
+    st.sidebar.markdown("### API Tools")
+    st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/data-provisioning-standards-dps-linter/" class="sidebar-link" target="_blank">API Linter</a>', unsafe_allow_html=True)
 
-# Main content based on sidebar selection
-st.markdown("<h1 class='left-title'>API Knowledge Hub</h1>", unsafe_allow_html=True)
+    # Main title
+    st.markdown('<h1 class="main-title">🚀 API Knowledge Hub</h1>', unsafe_allow_html=True)
 
-# User roles and descriptions
-roles = {
-    "I'm an API Consumer": "I want to integrate my application with existing APIs and accelerate the integration process.",
-    "I'm an API Developer": "New to API development and want to understand the tools available to speed up development.",
-    "I'm an API Designer": "Would like to learn about API standards to include in my designs and the tools available.",
-    "I'm a Tech Lead": "Want to understand the API lifecycle from development to deployment, along with the tools that support it.",
-    "I'm a Product Manager": "Want to understand API strategy and how to apply it in product development.",
-    "I'm a Security Engineer": "Want to understand API security best practices and tools to ensure compliance and protection.",
-    "I'm an API Tester": "Would like to explore API testing tools and automation techniques.",
-}
+    # Role Selection - Now at the top of the page
+    st.markdown("## Select Your Role")
+    selected_role = st.selectbox(
+        "", 
+        list(ROLE_QUESTIONS.keys())
+    )
 
-# Display user roles as clickable buttons
-for role, description in roles.items():
-    if st.button(role):
-        st.write(f"**Role:** {description}")
+    # Questions Section
+ #   st.markdown("## Questions")
+    selected_question = st.radio(
+        "We have chosen some questions for you :)", 
+        ROLE_QUESTIONS[selected_role]
+    )
+
+    if st.button("Get Insights", key="predefined_insights_button"):
+        with st.spinner("Generating insights..."):
+            ai_response = generate_ai_response(selected_question, selected_role)
+            st.session_state['last_response'] = {
+                'question': selected_question,
+                'response': ai_response,
+                'type': 'predefined'
+            }
+
+    # Custom question input - Moved to the bottom
+    st.markdown("## Ask Me Anything")
+    col1, col2 = st.columns([3, 1])
+    
+    with col1:
+        custom_question = st.text_area("Specific API-related question", height=150)
+    
+    with col2:
+        st.write("") # Spacer
+        st.write("") # Spacer
+        if st.button("Get Insights", key="custom_question_button"):
+            if custom_question:
+                with st.spinner("Generating insights..."):
+                    custom_response = generate_ai_response(custom_question, selected_role)
+                    st.session_state['last_response'] = {
+                        'question': custom_question,
+                        'response': custom_response,
+                        'type': 'custom'
+                    }
+            else:
+                st.warning("Please enter a question")
+
+    # Fixed AI Insights at the bottom
+    if 'last_response' in st.session_state:
+        st.markdown('<div class="insights-box">', unsafe_allow_html=True)
+        st.subheader("Insights")
         
-        # Provide relevant links based on the selected role
-        if role == "I'm an API Developer":
-            st.markdown("<a href='https://docs.developer.tech.gov.sg/docs/data-provisioning-standards-dps-linter/'>Generate Server Stub from OpenAPI Spec</a>", unsafe_allow_html=True)
-            st.markdown("<a href='https://example.com/api-design-tools'>API Testing Tools</a>", unsafe_allow_html=True)
-        elif role == "I'm an API Designer":
-            st.markdown("<a href='https://example.com/api-design-standards'>API Design Standards</a>", unsafe_allow_html=True)
-            st.markdown("<a href='https://example.com/api-design-tools'>API Design Tools</a>", unsafe_allow_html=True)
-        elif role == "I'm a Tech Lead":
-            st.markdown("<a href='https://example.com/api-lifecycle'>API Life Cycle</a>", unsafe_allow_html=True)
-            st.markdown("<a href='https://example.com/api-management-tools'>API Deployment and Management Tools</a>", unsafe_allow_html=True)
-        elif role == "I'm a Product Manager":
-            st.markdown("<a href='https://example.com/api-strategy'>API Strategy</a>", unsafe_allow_html=True)
-            st.markdown("<a href='https://example.com/api-product-development'>API Product Development</a>", unsafe_allow_html=True)
-        elif role == "I'm an API Tester":
-            st.markdown("<a href='https://example.com/api-testing-tools'>API Testing Tools</a>", unsafe_allow_html=True)
-            st.markdown("<a href='https://example.com/api-automation'>API Automation</a>", unsafe_allow_html=True)
-        elif role == "I'm a Security Engineer":
-            st.markdown("<a href='https://example.com/api-security'>API Security Best Practices</a>", unsafe_allow_html=True)
-            st.markdown("<a href='https://example.com/api-compliance'>API Compliance Tools</a>", unsafe_allow_html=True)
-        elif role == "I'm an API Consumer":     
-            st.markdown("<a href='https://example.com/api-testing'>Quickly Testing APIs with Postman and Curl</a>", unsafe_allow_html=True)
-            st.markdown("<a href='https://example.com/api-sdk'>Using SDKs and API Clients for Faster Integration</a>", unsafe_allow_html=True)
-            
+        # Display the question
+        st.markdown(f"**Question:** {st.session_state['last_response']['question']}")
+        
+        # Display the response
+        st.write(st.session_state['last_response']['response'])
+        
+        st.markdown('</div>', unsafe_allow_html=True)
+
+if __name__ == "__main__":
+    main()
