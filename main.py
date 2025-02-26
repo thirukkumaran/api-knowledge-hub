@@ -179,7 +179,7 @@ def main():
     # Questions Section
  #   st.markdown("## Questions")
     selected_question = st.radio(
-        "We have chosen some questions for you :)", 
+        "Here are some questions we've chosen for you! :)", 
         ROLE_QUESTIONS[selected_role]
     )
 
