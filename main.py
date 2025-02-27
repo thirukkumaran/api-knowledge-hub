@@ -16,57 +16,56 @@ st.set_page_config(
 # Role-based  questions
 ROLE_QUESTIONS = {
     "I'm an API Consumer": [
-        "How can I quickly integrate a new API into my application?",
-        "What are the best practices for API authentication?",
-        "How do I handle API rate limits effectively?",
-        "What tools can help me test and debug API integrations?",
-        "How can I ensure my API integration is secure?"
+        "How can I integrate new APIs seamlessly into my application?",
+        "Which authentication methods ensure robust API access?",
+        "What are effective strategies for managing API rate limits?",
+        "What tools and practices can I use to test and debug API integrations?",
+        "How do I verify that my API integration adheres to modern security standards?"
     ],
     "I'm an API Developer": [
-        "What are the tools available to accelerate API development?",
-        "Generate OpenAPI Specs with Standards and best practices?",
-        "How can I create scalable and performant APIs?",
-        "What are the best practices for API versioning?",
-        "How do I implement proper error handling in APIs?",
-        "What tools can help me develop APIs more efficiently?"
+        "Which tools and frameworks can accelerate my API development?",
+        "How can I generate comprehensive OpenAPI specifications following Standards and best practices?",
+        "What strategies help me build scalable, high-performance APIs?",
+        "How should I handle API versioning to ensure backward compatibility?",
+        "What methods are best for implementing consistent error handling in APIs?",
+        "Which resources can streamline my overall API development workflow?"
     ],
     "I'm an API Designer": [
-        "What are the API design standards to comply with?",
-        "Generate OpenAPI Specs with standards and best practices?",
-        "How can I create clear and consistent API documentation?",
-        "What are the best practices for API naming conventions?",
-        "How do I design APIs that are easy to understand and use?"
+        "What design standards should I follow to ensure consistency across APIs?",
+        "How can I align API design with OpenAPI specifications and industry best practices?",
+        "What approaches lead to clear and comprehensive API documentation?",
+        "Which naming conventions promote intuitive API design?",
+        "How do I create APIs that are both easy to understand and use?"
     ],
     "I'm a Tech Lead": [
-        "How can I manage the entire API lifecycle?",
-        "What strategies ensure API governance across teams?",
-        "How do I balance innovation with API standardization?",
-        "What metrics should I track for API performance?",
-        "How can I implement an effective API strategy?"
+        "What strategies can I adopt to manage the entire API lifecycle effectively?",
+        "How do I enforce API governance and standardization across teams?",
+        "How can I balance innovation with the need for API standardization?",
+        "Which key performance metrics should I monitor for API operations?",
+        "What steps can I take to develop a cohesive API strategy for my organization?"
     ],
     "I'm a Product Manager": [
-        "How do APIs drive product innovation?",
-        "What are the key considerations for API product development?",
-        "How can APIs create new revenue streams?",
-        "What makes a successful API product?",
-        "How do I prioritize API features?"
+        "How can APIs drive product innovation and differentiation?",
+        "What critical factors should guide API product development?",
+        "How can APIs open new revenue streams and market opportunities?",
+        "What distinguishes a successful API product in today’s market?",
+        "How do I prioritize API features to align with broader product goals?"
     ],
     "I'm a Security Engineer": [
-        "What are the top API security vulnerabilities?",
-        "How can I implement robust API authentication?",
-        "What are best practices for API security?",
-        "How do I protect against common API attacks?",
-        "What tools help in API security testing?"
+        "What are the most common security vulnerabilities in APIs?",
+        "How can I implement robust authentication and authorization for APIs?",
+        "Which best practices help secure API endpoints effectively?",
+        "How do I protect APIs from common cyber threats?",
+        "What tools and techniques ensure comprehensive API security testing?"
     ],
     "I'm an API Tester": [
-        "What are the best strategies for API testing?",
-        "How can I automate API testing?",
-        "What tools are essential for API testing?",
-        "How do I create comprehensive API test cases?",
-        "How can I simulate different API scenarios?"
+        "What comprehensive strategies can I use for API testing?",
+        "How can I automate API tests to ensure ongoing reliability?",
+        "Which tools are most effective for verifying API functionality?",
+        "How do I develop and maintain thorough API test cases?",
+        "What methods allow me to simulate diverse API usage scenarios for better testing?"
     ]
 }
-
 
 
 # Load environment variables
