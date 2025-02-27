@@ -2,6 +2,7 @@ import streamlit as st
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
+from default_answers import DEFAULT_ANSWERS
 
 # Load environment variables
 load_dotenv()
@@ -13,7 +14,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# Role-based  questions
+# Role-based questions
 ROLE_QUESTIONS = {
     "I'm an API Consumer": [
         "How can I integrate new APIs seamlessly into my application?",
@@ -48,7 +49,7 @@ ROLE_QUESTIONS = {
         "How can APIs drive product innovation and differentiation?",
         "What critical factors should guide API product development?",
         "How can APIs open new revenue streams and market opportunities?",
-        "What distinguishes a successful API product in today’s market?",
+        "What distinguishes a successful API product in today's market?",
         "How do I prioritize API features to align with broader product goals?"
     ],
     "I'm a Security Engineer": [
@@ -67,10 +68,6 @@ ROLE_QUESTIONS = {
     ]
 }
 
-
-# Load environment variables
-load_dotenv()
-
 # Get API key with error checking
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 if not OPENAI_API_KEY:
@@ -84,7 +81,7 @@ def generate_ai_response(question, role):
     """Generate AI response using OpenAI API"""
     try:
         response = client.chat.completions.create(
-            model="gpt-4o",
+            model="gpt-4",
             messages=[
                 {"role": "system", "content": f"You are an expert AI assistant specializing in APIs, focusing on the perspective of a {role}. Provide a comprehensive, detailed, and actionable response."},
                 {"role": "user", "content": question}
@@ -105,24 +102,25 @@ def main():
         text-align: center;
         margin-bottom: 20px;
     }
-    .role-title {
-        color: #3498DB;
-        font-weight: bold;
+    .chat-message {
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 8px;
     }
-    .insights-box {
-        background-color: #F4F6F7;
-        border-radius: 10px;
+    .user-message {
+        background-color: #f7f7f8;
+    }
+    .assistant-message {
+        background-color: white;
+        border: 1px solid #e0e0e0;
+    }
+    .answer-box {
+        background-color: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
         padding: 20px;
-        margin-top: 20px;
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80%;
-        max-height: 300px;
-        overflow-y: auto;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        z-index: 1000;
+        margin: 20px 0;
+        line-height: 1.6;
     }
     .sidebar-title {
         color: #2C3E50;
@@ -138,21 +136,10 @@ def main():
         color: #2980B9;
         text-decoration: underline;
     }
-    .stButton button {
-        background-color: #3498DB;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        transition: background-color 0.3s ease;
-    }
-    .stButton button:hover {
-        background-color: #2980B9;
-    }
     </style>
     """, unsafe_allow_html=True)
 
-    # Sidebar for API Lifecycle and Standards
+    # Sidebar content
     st.sidebar.markdown('<div class="sidebar-title">🔍 API Resources</div>', unsafe_allow_html=True)
     st.sidebar.markdown("### API Lifecycle")
     st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/api-governance-model/pages/8-lifecycle" class="sidebar-link" target="_blank">Lifecycle Stages</a>', unsafe_allow_html=True)
@@ -173,63 +160,64 @@ def main():
     # Main title
     st.markdown('<h1 class="main-title">🚀 API Knowledge Hub</h1>', unsafe_allow_html=True)
 
-    # Role Selection - Now at the top of the page
-    st.markdown("## Select Your Role")
-    selected_role = st.selectbox(
-        "", 
-        list(ROLE_QUESTIONS.keys())
-    )
+    # Initialize session state
+    if 'selected_role' not in st.session_state:
+        st.session_state.selected_role = list(ROLE_QUESTIONS.keys())[0]
+    if 'chat_history' not in st.session_state:
+        st.session_state.chat_history = []
 
-    # Questions Section
- #   st.markdown("## Questions")
-    selected_question = st.radio(
-        "Here are some questions we've chosen for you! :)", 
-        ROLE_QUESTIONS[selected_role]
-    )
+    # Create main layout with equal columns
+    left_col, right_col = st.columns(2)
 
-    if st.button("Get Insights", key="predefined_insights_button"):
-        with st.spinner("Generating insights..."):
-            ai_response = generate_ai_response(selected_question, selected_role)
-            st.session_state['last_response'] = {
-                'question': selected_question,
-                'response': ai_response,
-                'type': 'predefined'
-            }
+    with left_col:
+        # Role selection
+        st.markdown("## Persona")
+        selected_role = st.radio("", list(ROLE_QUESTIONS.keys()))
 
-    # Custom question input - Moved to the bottom
-    st.markdown("## Ask Me Anything")
-    col1, col2 = st.columns([3, 1])
-    
-    with col1:
-        custom_question = st.text_area("Specific API-related question", height=150)
-    
-    with col2:
-        st.write("") # Spacer
-        st.write("") # Spacer
+        # Questions
+        st.markdown("## Are you interested to know")
+        selected_question = st.radio("", ROLE_QUESTIONS[selected_role])
+
+        # Display answer immediately if available
+        if selected_role in DEFAULT_ANSWERS and selected_question in DEFAULT_ANSWERS[selected_role]:
+            st.markdown(f"""
+            <div class="answer-box">
+                {DEFAULT_ANSWERS[selected_role][selected_question]}
+            </div>
+            """, unsafe_allow_html=True)
+
+    with right_col:
+        st.markdown("## Choose your question")
+        custom_question = st.text_area("", height=150)
+        
         if st.button("Get Insights", key="custom_question_button"):
             if custom_question:
                 with st.spinner("Generating insights..."):
                     custom_response = generate_ai_response(custom_question, selected_role)
-                    st.session_state['last_response'] = {
+                    st.session_state.chat_history.append({
                         'question': custom_question,
-                        'response': custom_response,
-                        'type': 'custom'
-                    }
+                        'response': custom_response
+                    })
+                    st.markdown(f"""
+                    <div class="chat-message assistant-message">
+                        <div class="response-text">{custom_response}</div>
+                    </div>
+                    """, unsafe_allow_html=True)
             else:
                 st.warning("Please enter a question")
 
-    # Fixed AI Insights at the bottom
-    if 'last_response' in st.session_state:
-        st.markdown('<div class="insights-box">', unsafe_allow_html=True)
-        st.subheader("Insights")
-        
-        # Display the question
-        st.markdown(f"**Question:** {st.session_state['last_response']['question']}")
-        
-        # Display the response
-        st.write(st.session_state['last_response']['response'])
-        
-        st.markdown('</div>', unsafe_allow_html=True)
+        # Display chat history for custom questions
+        if st.session_state.chat_history:
+            st.markdown("### Previous Questions")
+            for chat in reversed(st.session_state.chat_history):
+                st.markdown(f"""
+                <div class="chat-message user-message">
+                    <div class="question-text">Q: {chat['question']}</div>
+                </div>
+                <div class="chat-message assistant-message">
+                    <div class="response-text">{chat['response']}</div>
+                </div>
+                """, unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
