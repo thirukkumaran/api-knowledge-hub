@@ -1,187 +1,283 @@
 DEFAULT_ANSWERS = {
     "I'm an API Designer": {
         "What design standards should I follow to ensure consistency across APIs?": """
-API Design Standards for Consistency
+Creating consistent and user-friendly APIs requires following established design standards and best practices. Here's a comprehensive guide:
 
 1. RESTful Design Principles
+Follow these core principles to ensure your APIs are intuitive and easy to use:
 
 Resource Naming:
-• Use nouns for resources
-• Follow hierarchical structure
-• Keep URLs clean and intuitive
-• Use plural for collections
-• Consistent casing (kebab-case)
+• Use clear, descriptive nouns for resources (e.g., /users, /orders)
+• Keep URLs clean and readable (e.g., /users/123/orders instead of /getOrdersForUser/123)
+• Use plural forms for collections (e.g., /products instead of /product)
+• Follow consistent casing (kebab-case for URLs, camelCase for parameters)
+• Maintain logical hierarchy in resource relationships
+
+Example of good resource naming:
+✓ GET /users/123/orders         - Get orders for user 123
+✓ POST /products               - Create a new product
+✓ PUT /orders/456/status       - Update order status
+✗ GET /getOrdersForUser/123    - Avoid verbs in URLs
+✗ POST /createNewProduct       - Avoid verbs in URLs
 
 HTTP Methods:
-• GET for retrieval
-• POST for creation
-• PUT for full updates
-• PATCH for partial updates
-• DELETE for removal
+• GET: Use for retrieving resources without side effects
+  Example: GET /articles/123 - Retrieve article details
+• POST: Use for creating new resources or complex operations
+  Example: POST /orders - Create a new order
+• PUT: Use for complete resource updates (idempotent operations)
+  Example: PUT /users/123 - Update all user fields
+• PATCH: Use for partial resource updates
+  Example: PATCH /products/456 - Update specific fields
+• DELETE: Use for removing resources
+  Example: DELETE /comments/789 - Remove a comment
 
 2. Request/Response Design
+Maintain consistency in how you handle data:
 
 Request Structure:
-• Clear parameter naming
-• Consistent data formats
-• Proper content types
-• Validation rules
-• Optional vs required fields
+• Use descriptive parameter names that clearly indicate their purpose
+  Example: ?status=active vs ?s=a
+• Keep request bodies focused and well-structured
+• Implement consistent validation rules across similar endpoints
+• Clearly document required vs optional fields
+• Use consistent data types for similar fields
+
+Example Request:
+{
+  "orderDetails": {
+    "productId": "123",
+    "quantity": 5,
+    "shippingAddress": {
+      "street": "123 Main St",
+      "city": "Springfield",
+      "zipCode": "12345"
+    }
+  }
+}
 
 Response Structure:
-• Consistent JSON format
-• Standard error responses
-• Proper status codes
-• Pagination format
-• Metadata inclusion
+• Return consistent JSON structures across all endpoints
+• Include appropriate HTTP status codes with clear meanings
+• Provide clear, actionable error messages
+• Implement standard pagination formats
+• Include relevant metadata
 
-3. Authentication & Security
+Example Response:
+{
+  "data": {
+    "orderId": "789",
+    "status": "confirmed",
+    "total": 99.99
+  },
+  "metadata": {
+    "timestamp": "2025-03-01T13:41:17+08:00",
+    "requestId": "req_abc123"
+  }
+}
 
-Security Standards:
-• OAuth 2.0 implementation
-• API key management
-• Rate limiting rules
-• CORS policies
-• Security headers
+3. Error Handling
+Implement consistent error responses:
 
-Access Control:
-• Role-based access
-• Scopes definition
-• Permission levels
-• Token management
-• Rate limit tiers
+Error Format:
+{
+  "error": {
+    "code": "INVALID_INPUT",
+    "message": "Invalid product quantity",
+    "details": {
+      "field": "quantity",
+      "reason": "Must be greater than 0"
+    }
+  }
+}
 
-4. Documentation Standards
-
-API Documentation:
-• OpenAPI/Swagger specs
-• Detailed descriptions
-• Example requests/responses
-• Error scenarios
-• Authentication details
-
-Implementation Guide:
-• Getting started guide
-• Code examples
-• Use cases
-• Best practices
-• Troubleshooting
-
-5. Versioning Standards
-
-Version Control:
-• Semantic versioning
-• Version in URL/header
-• Deprecation policy
-• Migration guides
-• Breaking changes
-
-Compatibility:
-• Backward compatibility
-• Forward compatibility
-• Breaking vs non-breaking
-• Version lifecycle
-• Support policy
+Common HTTP Status Codes:
+• 200 OK: Successful request
+• 201 Created: Resource created
+• 400 Bad Request: Invalid input
+• 401 Unauthorized: Authentication required
+• 403 Forbidden: Insufficient permissions
+• 404 Not Found: Resource doesn't exist
+• 429 Too Many Requests: Rate limit exceeded
+• 500 Internal Server Error: Server-side error
 
 Best Practices:
-• Consistent naming
-• Clear documentation
-• Regular reviews
-• Feedback incorporation
-• Continuous improvement
+• Maintain consistent standards across all endpoints
+• Document everything thoroughly
+• Test all error scenarios
+• Monitor API usage and errors
+• Regular security audits
+• Keep documentation up-to-date
 """,
-
         "How can I align API design with OpenAPI specifications and industry best practices?": """
-Aligning API Design with OpenAPI Standards
+Aligning your API design with OpenAPI specifications ensures better documentation, tooling support, and developer experience. Here's a detailed guide:
 
 1. OpenAPI Structure
+Understanding the key components of OpenAPI specification:
 
-Core Components:
-• Info section
-• Servers configuration
-• Paths definition
-• Components section
-• Security schemes
+Info Section:
+• Title and description of your API
+• Version information
+• Contact details and license
+• Terms of service
 
-Schema Organization:
-• Reusable components
-• Data models
-• Parameter definitions
-• Response templates
-• Security definitions
+Example OpenAPI Info:
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "E-commerce API",
+    "description": "API for managing products and orders",
+    "version": "1.0.0",
+    "contact": {
+      "name": "API Support",
+      "email": "api@example.com"
+    }
+  }
+}
 
 2. Endpoint Design
+Organizing your API endpoints effectively:
 
 Path Structure:
-• Resource-based paths
-• Query parameters
-• Path parameters
-• Request body
-• Response structure
+• Group related endpoints logically
+• Use consistent URL patterns
+• Include clear operation IDs
+• Provide detailed descriptions
 
-Operation Details:
-• Method definitions
-• Parameter descriptions
-• Response codes
-• Example values
-• Security requirements
+Example Endpoint:
+{
+  "/products": {
+    "get": {
+      "summary": "List all products",
+      "parameters": [
+        {
+          "name": "category",
+          "in": "query",
+          "description": "Filter by product category",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductList"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
 
-3. Data Modeling
+3. Component Organization
+Creating reusable elements:
 
 Schema Definitions:
-• Clear property names
-• Proper data types
-• Required fields
-• Default values
-• Constraints
+• Define clear data models
+• Use appropriate data types
+• Include validation rules
+• Add helpful examples
 
-Validation Rules:
-• Format specifications
-• Pattern validation
-• Range limitations
-• Enum values
-• Custom formats
+Example Schema:
+{
+  "Product": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "format": "uuid",
+        "example": "123e4567-e89b-12d3-a456-426614174000"
+      },
+      "name": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 100,
+        "example": "Premium Widget"
+      },
+      "price": {
+        "type": "number",
+        "minimum": 0,
+        "example": 29.99
+      }
+    },
+    "required": ["name", "price"]
+  }
+}
 
-4. Security Definitions
+4. Security Implementation
+Defining authentication and authorization:
 
-Authentication:
-• Security schemes
-• OAuth flows
-• API key location
-• Scope definitions
-• Token formats
+Security Schemes:
+• OAuth 2.0 flows
+• API key configuration
+• JWT authentication
+• Basic authentication
 
-Authorization:
-• Permission levels
-• Role requirements
-• Access scopes
-• Security policies
-• Rate limiting
+Example Security:
+{
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "apiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  }
+}
 
-5. Documentation
+5. Response Standards
+Standardizing API responses:
 
-API Reference:
-• Operation summaries
-• Detailed descriptions
-• Example requests
-• Response examples
-• Error scenarios
+Success Response:
+{
+  "data": {
+    "id": "123",
+    "name": "Product Name",
+    "price": 99.99
+  },
+  "metadata": {
+    "timestamp": "2025-03-01T13:58:35+08:00",
+    "requestId": "req_abc123"
+  }
+}
 
-Implementation Guide:
-• Getting started
-• Authentication guide
-• Use cases
-• Best practices
-• Troubleshooting
+Error Response:
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Invalid input provided",
+    "details": {
+      "field": "price",
+      "reason": "Must be greater than 0"
+    }
+  }
+}
 
 Best Practices:
-• Clear descriptions
-• Consistent naming
-• Complete examples
-• Regular updates
-• Version control
-""",
+• Keep specifications up-to-date
+• Use version control for specs
+• Review and validate regularly
+• Get developer feedback
+• Monitor usage patterns
 
+Tools to Use:
+• Swagger Editor - For writing specs
+• Swagger UI - For documentation
+• OpenAPI Generator - For code generation
+• Postman - For testing
+• Spectral - For linting specifications""",
         "What approaches lead to clear and comprehensive API documentation?": """
 Creating Clear API Documentation
 
@@ -272,7 +368,6 @@ Best Practices:
 • Example testing
 • Clear writing
 """,
-
         "Which naming conventions promote intuitive API design?": """
 API Naming Conventions
 
@@ -363,7 +458,6 @@ Best Practices:
 • Documentation
 • Standards compliance
 """,
-
         "How do I create APIs that are both easy to understand and use?": """
 Creating User-Friendly APIs
 
@@ -653,296 +747,6 @@ Resources to streamline API development:
    - Community forums
    - Tech blogs
    - Conferences
-"""
-    },
-    "I'm an API Consumer": {
-        "How can I integrate new APIs seamlessly into my application?": """
-Best Practices for API Integration:
-
-1. Planning & Research
-   - Study API documentation thoroughly
-   - Understand authentication methods
-   - Check rate limits and quotas
-   - Review example code and SDKs
-   - Identify required endpoints
-
-2. Implementation Strategy
-   - Use official SDK if available
-   - Create modular API client
-   - Implement retry mechanisms
-   - Handle errors gracefully
-   - Log API interactions
-
-3. Authentication & Security
-   - Secure credential storage
-   - Use environment variables
-   - Implement token refresh
-   - Follow security guidelines
-   - Monitor for vulnerabilities
-
-4. Error Handling
-   - Implement circuit breakers
-   - Add request timeouts
-   - Handle rate limiting
-   - Log detailed errors
-   - Plan fallback options
-
-5. Testing & Validation
-   - Use sandbox environment
-   - Write integration tests
-   - Monitor performance
-   - Validate responses
-   - Test error scenarios
-
-6. Maintenance
-   - Monitor API changes
-   - Update dependencies
-   - Track deprecations
-   - Monitor usage
-   - Optimize performance
-
-7. Tools & Resources
-   - Postman for testing
-   - Swagger UI for docs
-   - API monitoring tools
-   - Logging solutions
-   - Security scanners
-""",
-        "Which authentication methods ensure robust API access?": """
-Robust API Authentication Methods:
-
-1. OAuth 2.0
-   Implementation:
-   - Authorization flows
-   - Token management
-   - Scope handling
-   - Refresh tokens
-   - State validation
-
-2. API Keys
-   Best Practices:
-   - Secure storage
-   - Regular rotation
-   - Access monitoring
-   - Rate limiting
-   - Environment separation
-
-3. JWT (JSON Web Tokens)
-   Features:
-   - Token structure
-   - Signature validation
-   - Claims handling
-   - Expiration management
-   - Refresh strategy
-
-4. Multi-Factor Authentication
-   Components:
-   - 2FA implementation
-   - Time-based tokens
-   - Backup codes
-   - Device verification
-   - Session management
-
-5. Client Certificates
-   Implementation:
-   - Certificate generation
-   - Validation process
-   - Renewal handling
-   - Revocation lists
-   - Chain verification
-
-6. Security Best Practices
-   Key Areas:
-   - HTTPS enforcement
-   - Token encryption
-   - Secure storage
-   - Access logging
-   - Audit trails
-
-7. Common Vulnerabilities
-   Prevention:
-   - Token exposure
-   - MITM attacks
-   - Replay attacks
-   - Brute force
-   - Session hijacking
-""",
-        "What are effective strategies for managing API rate limits?": """
-API Rate Limit Management Strategies:
-
-1. Client-Side Implementation
-   Techniques:
-   - Request queuing
-   - Concurrency control
-   - Batch processing
-   - Request prioritization
-   - Load balancing
-
-2. Rate Tracking
-   Methods:
-   - Token bucket algorithm
-   - Leaky bucket algorithm
-   - Fixed window counter
-   - Sliding window
-   - Distributed tracking
-
-3. Response Handling
-   Strategies:
-   - Header monitoring
-   - Quota tracking
-   - Backoff implementation
-   - Error recovery
-   - Request retries
-
-4. Optimization
-   Approaches:
-   - Cache implementation
-   - Request consolidation
-   - Response compression
-   - Connection pooling
-   - Payload optimization
-
-5. Monitoring & Alerts
-   Systems:
-   - Usage dashboards
-   - Alert thresholds
-   - Trend analysis
-   - Capacity planning
-   - Performance metrics
-
-6. Error Management
-   Handling:
-   - 429 responses
-   - Retry strategies
-   - Circuit breakers
-   - Fallback options
-   - Error logging
-
-7. Best Practices
-   Guidelines:
-   - Documentation
-   - Testing strategy
-   - Monitoring setup
-   - Optimization plan
-   - Maintenance schedule
-""",
-        "What tools and practices can I use to test and debug API integrations?": """
-API Testing & Debugging Tools and Practices:
-
-1. Testing Tools
-   Popular Options:
-   - Postman for manual testing
-   - JMeter for load testing
-   - Newman for automation
-   - SoapUI for SOAP APIs
-   - K6 for performance
-
-2. Debugging Tools
-   Essential Tools:
-   - Charles Proxy
-   - Fiddler
-   - Chrome DevTools
-   - Wireshark
-   - API Gateways
-
-3. Testing Types
-   Coverage Areas:
-   - Unit testing
-   - Integration testing
-   - Load testing
-   - Security testing
-   - Contract testing
-
-4. Debugging Practices
-   Methods:
-   - Request logging
-   - Response validation
-   - Header inspection
-   - Error tracking
-   - Performance profiling
-
-5. Monitoring Tools
-   Solutions:
-   - New Relic
-   - Datadog
-   - Grafana
-   - Prometheus
-   - ELK Stack
-
-6. Documentation Tools
-   Options:
-   - Swagger UI
-   - ReDoc
-   - API Blueprint
-   - Postman Collections
-   - OpenAPI Generator
-
-7. Best Practices
-   Guidelines:
-   - Test automation
-   - CI/CD integration
-   - Environment isolation
-   - Data management
-   - Version control
-""",
-        "How do I verify that my API integration adheres to modern security standards?": """
-API Security Standards & Verification:
-
-1. Authentication Verification
-   Checks:
-   - OAuth implementation
-   - Token validation
-   - Credential security
-   - Session management
-   - MFA implementation
-
-2. Transport Security
-   Requirements:
-   - TLS 1.2/1.3
-   - Certificate validation
-   - HTTPS enforcement
-   - Cipher suites
-   - Perfect forward secrecy
-
-3. Data Protection
-   Measures:
-   - Input validation
-   - Output encoding
-   - Encryption standards
-   - Data sanitization
-   - PII handling
-
-4. Access Control
-   Implementation:
-   - Role-based access
-   - Permission models
-   - Rate limiting
-   - IP restrictions
-   - Audit logging
-
-5. Security Testing
-   Methods:
-   - Penetration testing
-   - Vulnerability scanning
-   - Security headers
-   - OWASP compliance
-   - Code analysis
-
-6. Compliance Standards
-   Frameworks:
-   - OWASP Top 10
-   - PCI DSS
-   - GDPR
-   - ISO 27001
-   - SOC 2
-
-7. Monitoring & Response
-   Systems:
-   - Security monitoring
-   - Incident response
-   - Alert systems
-   - Audit trails
-   - Recovery plans
 """
     },
     "I'm a Tech Lead": {
