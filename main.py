@@ -56,6 +56,34 @@ def main():
         font-size: 1.1em;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
+    .answer-box p {
+        margin-bottom: 1em;
+    }
+    .answer-box ul, .answer-box ol {
+        margin: 1em 0;
+        padding-left: 2em;
+    }
+    .answer-box li {
+        margin: 0.5em 0;
+    }
+    .answer-box h1, .answer-box h2, .answer-box h3 {
+        margin: 1.5em 0 1em 0;
+        color: #2C3E50;
+    }
+    .answer-box code {
+        background: #f8f9fa;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.9em;
+        color: #e83e8c;
+    }
+    .answer-box pre {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        overflow-x: auto;
+        margin: 1em 0;
+    }
     .sidebar-title {
         color: #2C3E50;
         font-weight: bold;
@@ -125,9 +153,10 @@ def main():
 
         if selected_question in DEFAULT_ANSWERS[selected_role]:
             default_answer = DEFAULT_ANSWERS[selected_role][selected_question]
-            st.write(f"""
+            formatted_answer = default_answer.replace('\n', '<br>')
+            st.markdown(f"""
             <div class="answer-box">
-            {default_answer}
+            {formatted_answer}
             </div>
             """, unsafe_allow_html=True)
 
@@ -135,7 +164,8 @@ def main():
         st.markdown('<h2 class="section-heading">Ask Your Own Question</h2>', unsafe_allow_html=True)
         st.markdown(f"*Current Role: {selected_role}*")
         
-        custom_question = st.text_area("", height=200)
+        default_question = "Generate an OpenAPI Specification for managing customer data with full CRUD operations. Ensure compliance with GovTech's standards, covering authentication, security best practices, rate limiting, and versioning"
+        custom_question = st.text_area("", value=default_question, height=200)
         
         if st.button("Get Insights", key="custom_question_button"):
             if custom_question:
