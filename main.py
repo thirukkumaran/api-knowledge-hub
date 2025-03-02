@@ -2,13 +2,24 @@ import streamlit as st
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
-from default_answers import DEFAULT_ANSWERS
+from answers import DEFAULT_ANSWERS
 
 # Load environment variables
 load_dotenv()
 
 # Initialize OpenAI client
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+
+# Define default questions for each role
+DEFAULT_QUESTIONS = {
+    "I'm an API Designer": "How can I design a RESTful API that follows best practices for resource naming, HTTP methods, and response structures?",
+    "I'm an API Developer": "Generate an OpenAPI Specification for managing customer data with full CRUD operations. Ensure compliance with GovTech's standards, covering authentication, security best practices, rate limiting, and versioning.",
+    "I'm an API Consumer": "What are the best practices for securely integrating with third-party APIs, including authentication, error handling, and rate limit management?",
+    "I'm a Tech Lead": "How can I establish an API governance framework that balances standardization with innovation across multiple development teams?",
+    "I'm a Product Manager": "What metrics and KPIs should I track to measure the success and adoption of our API products?",
+    "I'm a Security Engineer": "What security controls and testing methodologies should I implement to protect our APIs from common vulnerabilities like OWASP API Top 10?",
+    "I'm an API Tester": "How can I create a comprehensive API testing strategy that covers functional, performance, security, and integration testing?"
+}
 
 def generate_ai_response(question, role):
     try:
@@ -65,6 +76,19 @@ def main():
     }
     .answer-box li {
         margin: 0.5em 0;
+    }
+    .answer-box a {
+        color: #3498DB;
+        text-decoration: none;
+        border-bottom: 1px dotted #3498DB;
+        transition: all 0.2s ease;
+    }
+    .answer-box a:hover {
+        color: #2980B9;
+        border-bottom: 1px solid #2980B9;
+    }
+    .answer-box strong {
+        color: #2C3E50;
     }
     .answer-box h1, .answer-box h2, .answer-box h3 {
         margin: 1.5em 0 1em 0;
@@ -145,10 +169,10 @@ def main():
     col1, col2 = st.columns([1, 1])
 
     with col1:
-        st.markdown('<h3 class="section-heading">Choose Your Role</h3>', unsafe_allow_html=True)
+        st.markdown('<h3 class="section-heading">Persona</h3>', unsafe_allow_html=True)
         selected_role = st.radio("", list(DEFAULT_ANSWERS.keys()))
 
-        st.markdown('<h3 class="section-heading">Common Questions</h3>', unsafe_allow_html=True)
+        st.markdown('<h3 class="section-heading">You may be interested in:</h3>', unsafe_allow_html=True)
         selected_question = st.radio(" ", list(DEFAULT_ANSWERS[selected_role].keys()))
 
         if selected_question in DEFAULT_ANSWERS[selected_role]:
@@ -161,10 +185,10 @@ def main():
             """, unsafe_allow_html=True)
 
     with col2:
-        st.markdown('<h2 class="section-heading">Ask Your Own Question</h2>', unsafe_allow_html=True)
+        st.markdown('<h2 class="section-heading">Choose your question</h2>', unsafe_allow_html=True)
         st.markdown(f"*Current Role: {selected_role}*")
         
-        default_question = "Generate an OpenAPI Specification for managing customer data with full CRUD operations. Ensure compliance with GovTech's standards, covering authentication, security best practices, rate limiting, and versioning"
+        default_question = DEFAULT_QUESTIONS[selected_role]
         custom_question = st.text_area("", value=default_question, height=200)
         
         if st.button("Get Insights", key="custom_question_button"):
@@ -186,14 +210,12 @@ def main():
         # Display chat history for custom questions
         if st.session_state.chat_history:
             st.markdown("")  # Add vertical space
-            st.markdown('<h2 class="section-heading">Previous Questions</h2>', unsafe_allow_html=True)
-            for chat in reversed(st.session_state.chat_history):
-                st.markdown(f"**Q:** {chat['question']}")
-                st.write(f"""
-                <div class="answer-box">
-                {chat['response']}
-                </div>
-                """, unsafe_allow_html=True)
+            st.markdown('<h3 class="section-heading">Previous Questions</h3>', unsafe_allow_html=True)
+            
+            for i, chat in enumerate(reversed(st.session_state.chat_history)):
+                if i < 3:  # Show only the last 3 questions
+                    with st.expander(f"Q: {chat['question'][:50]}{'...' if len(chat['question']) > 50 else ''}"):
+                        st.write(chat['response'])
 
     # Sidebar content
     st.sidebar.markdown('<div class="sidebar-title">🔍 API Resources</div>', unsafe_allow_html=True)
