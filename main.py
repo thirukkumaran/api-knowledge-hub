@@ -156,6 +156,12 @@ def main():
         background-color: #2980B9;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
+    .subtitle {
+        font-size: 4.8rem;
+        color: #666;
+        margin-bottom: 2rem;
+        line-height: 2;
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -164,6 +170,7 @@ def main():
         st.session_state.chat_history = []
 
     st.markdown('<h1 class="main-title">API Knowledge Hub 🚀</h1>', unsafe_allow_html=True)
+    st.markdown('<p class="subtitle">API Knowledge Hub aims to provide guidance, tools, support, and a platform for connecting all personas involved in the API space across the Whole-of-Government (WoG)</p>', unsafe_allow_html=True)
 
     # Create two columns
     col1, col2 = st.columns([1, 1])
@@ -185,7 +192,7 @@ def main():
             """, unsafe_allow_html=True)
 
     with col2:
-        st.markdown('<h2 class="section-heading">Choose your question</h2>', unsafe_allow_html=True)
+        st.markdown('<h3 class="section-heading">Choose your question</h3>', unsafe_allow_html=True)
         st.markdown(f"*Current Role: {selected_role}*")
         
         default_question = DEFAULT_QUESTIONS[selected_role]
@@ -229,6 +236,7 @@ def main():
 
     st.sidebar.markdown("API Development")
     st.sidebar.markdown('<a href="https://medium.com/@thirukkumaran/rapid-prototyping-of-design-first-apis-in-go-601d8833593a" class="sidebar-link">API Design-First Development</a>', unsafe_allow_html=True)
+    st.sidebar.markdown('<a href="https://github.com/tohyongcheng/template-backend-express" class="sidebar-link">OpenAPI Templates</a>', unsafe_allow_html=True)
 
     st.sidebar.markdown("API Security")
     st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/api-governance-model/pages/4-security" class="sidebar-link">Security Best Practices</a>', unsafe_allow_html=True)
@@ -238,6 +246,9 @@ def main():
 
     st.sidebar.markdown("API Tools")
     st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/data-provisioning-standards-dps-linter/" class="sidebar-link">API Linter</a>', unsafe_allow_html=True)
+    st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/api-governance-model/?id=contact-us" class="sidebar-link">Ask API Community</a>', unsafe_allow_html=True)
+
+    
 
     # Add the footer
     st.markdown("""
