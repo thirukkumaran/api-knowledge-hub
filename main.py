@@ -227,28 +227,25 @@ def main():
     # Sidebar content
     st.sidebar.markdown('<div class="sidebar-title">🔍 API Resources</div>', unsafe_allow_html=True)
     
-    st.sidebar.markdown("API Lifecycle")
+    st.sidebar.markdown("API Lifecycle & Deployment")
     st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/api-governance-model/pages/8-lifecycle" class="sidebar-link">Lifecycle Stages</a>', unsafe_allow_html=True)
+    st.sidebar.markdown('<a href="https://www.developer.tech.gov.sg/products/categories/data-and-apis/apex-cloud/overview" class="sidebar-link">APEX Cloud API Gateway</a>', unsafe_allow_html=True)
     
     st.sidebar.markdown("API Design Standards")
     st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/api-governance-model/pages/3-api-design" class="sidebar-link">Design Best Practices</a>', unsafe_allow_html=True)
-    st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/api-governance-model/pages/6-versioning" class="sidebar-link">Versioning</a>', unsafe_allow_html=True)
+    st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/api-governance-model/pages/4-security" class="sidebar-link">Security Best Practices</a>', unsafe_allow_html=True)
 
     st.sidebar.markdown("API Development")
     st.sidebar.markdown('<a href="https://medium.com/@thirukkumaran/rapid-prototyping-of-design-first-apis-in-go-601d8833593a" class="sidebar-link">API Design-First Development</a>', unsafe_allow_html=True)
-    st.sidebar.markdown('<a href="https://github.com/tohyongcheng/template-backend-express" class="sidebar-link">OpenAPI Templates</a>', unsafe_allow_html=True)
-
-    st.sidebar.markdown("API Security")
-    st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/api-governance-model/pages/4-security" class="sidebar-link">Security Best Practices</a>', unsafe_allow_html=True)
+    st.sidebar.markdown('<a href="https://github.com/tohyongcheng/template-backend-express" class="sidebar-link">OpenAPI Templates</a>', unsafe_allow_html=True)    
 
     st.sidebar.markdown("API Testing")
-    st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/api-governance-model/pages/5-testing" class="sidebar-link">API Testing</a>', unsafe_allow_html=True)
+    st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/api-governance-model/pages/5-testing" class="sidebar-link">API Testing</a>', unsafe_allow_html=True)    
 
-    st.sidebar.markdown("API Tools")
+    st.sidebar.markdown("API Tools & Support")
     st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/data-provisioning-standards-dps-linter/" class="sidebar-link">API Linter</a>', unsafe_allow_html=True)
     st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/api-governance-model/?id=contact-us" class="sidebar-link">Ask API Community</a>', unsafe_allow_html=True)
 
-    
 
     # Add the footer
     st.markdown("""
