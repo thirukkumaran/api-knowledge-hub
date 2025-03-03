@@ -36,6 +36,10 @@ def generate_ai_response(question, role):
         return f"Error generating response: {str(e)}"
 
 def main():
+    # Initialize session state for chat history
+    if 'chat_history' not in st.session_state:
+        st.session_state.chat_history = []
+
     # Set page config to wide mode
     st.set_page_config(layout="wide")
 
@@ -65,13 +69,12 @@ def main():
         margin: 35px 0;
         line-height: 1.8;
         font-size: 1.1em;
-        width: 100vw;
-        position: relative;
-        left: 50%;
-        right: 50%;
-        margin-left: -50vw;
-        margin-right: -50vw;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        box-sizing: border-box;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        word-break: break-word;
+        white-space: normal;
     }
     .answer-box p {
         margin-bottom: 1em;
@@ -168,24 +171,6 @@ def main():
         margin-bottom: 2rem;
         line-height: 2;
     }
-    .stExpander {
-        width: 100vw !important;
-        position: relative;
-        left: 50%;
-        right: 50%;
-        margin-left: -50vw;
-        margin-right: -50vw;
-    }
-    footer {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        width: 100%;
-        background-color: #333;
-        color: white;
-        z-index: 999;
-    }
     .full-width-container {
         width: 100vw;
         position: relative;
@@ -194,12 +179,19 @@ def main():
         margin-left: -50vw;
         margin-right: -50vw;
     }
+    .answer-container {
+        background-color: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 35px 50px;
+        margin: 35px 0;
+        line-height: 1.8;
+        font-size: 1.1em;
+        width: 100%;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
     </style>
     """, unsafe_allow_html=True)
-
-    # Initialize session state for chat history
-    if 'chat_history' not in st.session_state:
-        st.session_state.chat_history = []
 
     st.markdown('<h1 class="main-title">API Knowledge Hub 🚀</h1>', unsafe_allow_html=True)
     st.markdown('<p class="subtitle">API Knowledge Hub aims to provide guidance, tools, support, and a platform for connecting all personas involved in the API space across the Whole-of-Government (WoG)</p>', unsafe_allow_html=True)
@@ -229,12 +221,8 @@ def main():
                         'response': custom_response
                     })
                     
-                    # Use a full-width container for the answer
-                    st.markdown(f"""
-                    <div class="answer-box">
-                    {custom_response}
-                    </div>
-                    """, unsafe_allow_html=True)
+                    # Display the response with full width
+                    st.markdown(custom_response, unsafe_allow_html=True)
             else:
                 st.warning("Please enter a question")
 
