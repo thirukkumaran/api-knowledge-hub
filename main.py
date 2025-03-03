@@ -239,5 +239,17 @@ def main():
     st.sidebar.markdown("API Tools")
     st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/data-provisioning-standards-dps-linter/" class="sidebar-link">API Linter</a>', unsafe_allow_html=True)
 
+    # Add the footer
+    st.markdown("""
+    <footer>
+    <div class="flex flex-col gap-8 bg-neutral-800 px-4 py-10 text-white lg:px-32"><p class="text-3xl font-bold">API Knowledge Hub</p>
+    <div class="flex flex-col"><p class="text-lg">Built as part of the GovTech {build} Hackathon</p></div>
+    <div class="flex gap-8 text-sm justify-center"><a href="https://www.tech.gov.sg/contact-us/">Contact Us</a>
+    <a href="https://www.tech.gov.sg/report-vulnerability/">Report Vulnerability</a><a href="https://www.tech.gov.sg/privacy/">Privacy Statement</a>
+    <a href="https://www.tech.gov.sg/terms-of-use/">Terms of Use</a>
+    </div><div data-orientation="horizontal" role="none" class="shrink-0 bg-border h-[1px] w-full"></div><p class="self-end text-sm mt-4"> 2025 Government Technology Agency of Singapore | GovTech</p></div>
+    </footer>
+    """, unsafe_allow_html=True)
+
 if __name__ == "__main__":
     main()
