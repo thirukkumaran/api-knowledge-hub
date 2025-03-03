@@ -65,6 +65,12 @@ def main():
         margin: 35px 0;
         line-height: 1.8;
         font-size: 1.1em;
+        width: 100vw;
+        position: relative;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;
+        margin-right: -50vw;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
     .answer-box p {
@@ -162,6 +168,32 @@ def main():
         margin-bottom: 2rem;
         line-height: 2;
     }
+    .stExpander {
+        width: 100vw !important;
+        position: relative;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;
+        margin-right: -50vw;
+    }
+    footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        background-color: #333;
+        color: white;
+        z-index: 999;
+    }
+    .full-width-container {
+        width: 100vw;
+        position: relative;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;
+        margin-right: -50vw;
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -182,23 +214,13 @@ def main():
         st.markdown('<h3 class="section-heading">You may be interested in:</h3>', unsafe_allow_html=True)
         selected_question = st.radio(" ", list(DEFAULT_ANSWERS[selected_role].keys()))
 
-        if selected_question in DEFAULT_ANSWERS[selected_role]:
-            default_answer = DEFAULT_ANSWERS[selected_role][selected_question]
-            formatted_answer = default_answer.replace('\n', '<br>')
-            st.markdown(f"""
-            <div class="answer-box">
-            {formatted_answer}
-            </div>
-            """, unsafe_allow_html=True)
-
     with col2:
         st.markdown('<h3 class="section-heading">Choose your question</h3>', unsafe_allow_html=True)
         st.markdown(f"*Current Role: {selected_role}*")
         
-        default_question = DEFAULT_QUESTIONS[selected_role]
-        custom_question = st.text_area("", value=default_question, height=200)
+        custom_question = st.text_area("", value=selected_question, height=200)
         
-        if st.button("Get Insights", key="custom_question_button"):
+        if st.button("Get Insights"):
             if custom_question:
                 with st.spinner("Generating insights..."):
                     custom_response = generate_ai_response(custom_question, selected_role)
@@ -206,7 +228,9 @@ def main():
                         'question': custom_question,
                         'response': custom_response
                     })
-                    st.write(f"""
+                    
+                    # Use a full-width container for the answer
+                    st.markdown(f"""
                     <div class="answer-box">
                     {custom_response}
                     </div>
@@ -219,13 +243,15 @@ def main():
             st.markdown("")  # Add vertical space
             st.markdown('<h3 class="section-heading">Previous Questions</h3>', unsafe_allow_html=True)
             
+            st.markdown('<div class="full-width-container">', unsafe_allow_html=True)
             for i, chat in enumerate(reversed(st.session_state.chat_history)):
                 if i < 3:  # Show only the last 3 questions
                     with st.expander(f"Q: {chat['question'][:50]}{'...' if len(chat['question']) > 50 else ''}"):
                         st.write(chat['response'])
+            st.markdown('</div>', unsafe_allow_html=True)
 
     # Sidebar content
-    st.sidebar.markdown('<div class="sidebar-title">🔍 API Resources</div>', unsafe_allow_html=True)
+    st.sidebar.markdown('<div class="sidebar-title"> API Resources</div>', unsafe_allow_html=True)
     
     st.sidebar.markdown("API Lifecycle & Deployment")
     st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/api-governance-model/pages/8-lifecycle" class="sidebar-link">Lifecycle Stages</a>', unsafe_allow_html=True)
@@ -249,13 +275,19 @@ def main():
 
     # Add the footer
     st.markdown("""
-    <footer>
-    <div class="flex flex-col gap-8 bg-neutral-800 px-4 py-10 text-white lg:px-32"><p class="text-3xl font-bold">API Knowledge Hub</p>
-    <div class="flex flex-col"><p class="text-lg">Built as part of the GovTech {build} Hackathon</p></div>
-    <div class="flex gap-8 text-sm justify-center"><a href="https://www.tech.gov.sg/contact-us/">Contact Us</a>
-    <a href="https://www.tech.gov.sg/report-vulnerability/">Report Vulnerability</a><a href="https://www.tech.gov.sg/privacy/">Privacy Statement</a>
-    <a href="https://www.tech.gov.sg/terms-of-use/">Terms of Use</a>
-    </div><div data-orientation="horizontal" role="none" class="shrink-0 bg-border h-[1px] w-full"></div><p class="self-end text-sm mt-4"> 2025 Government Technology Agency of Singapore | GovTech</p></div>
+    <footer style="position: fixed; bottom: 0; left: 0; right: 0; width: 100%; background-color: #333; color: white; z-index: 999; padding: 8px 0; text-align: center;">
+      <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p style="font-size: 14px; margin: 0;">Built as part of the GovTech {build} Hackathon</p>
+          <div style="display: flex; gap: 20px;">
+            <a href="https://www.tech.gov.sg/contact-us/" style="color: white; text-decoration: none; font-size: 12px;">Contact Us</a>
+            <a href="https://www.tech.gov.sg/report-vulnerability/" style="color: white; text-decoration: none; font-size: 12px;">Report Vulnerability</a>
+            <a href="https://www.tech.gov.sg/privacy/" style="color: white; text-decoration: none; font-size: 12px;">Privacy Statement</a>
+            <a href="https://www.tech.gov.sg/terms-of-use/" style="color: white; text-decoration: none; font-size: 12px;">Terms of Use</a>
+          </div>
+          <p style="font-size: 12px; margin: 0;"> 2025 Government Technology Agency of Singapore | GovTech</p>
+        </div>
+      </div>
     </footer>
     """, unsafe_allow_html=True)
 
