@@ -3,6 +3,7 @@ from openai import OpenAI
 import os
 from dotenv import load_dotenv
 from answers import DEFAULT_ANSWERS
+import base64
 
 # Load environment variables
 load_dotenv()
@@ -258,7 +259,14 @@ def main():
 
     st.sidebar.markdown("API Tools & Support")
     st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/data-provisioning-standards-dps-linter/" class="sidebar-link">API Linter</a>', unsafe_allow_html=True)
-    st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/data-provisioning-standards-dps-linter/" class="sidebar-link">API Checklist</a>', unsafe_allow_html=True)
+    
+    # Add API checklist as a link that looks like the other sidebar links
+    with open('API-checklist.docx', 'rb') as file:
+        checklist_bytes = file.read()
+        b64 = base64.b64encode(checklist_bytes).decode()
+        href = f'data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,{b64}'
+        st.sidebar.markdown(f'<a href="{href}" class="sidebar-link" download="API-checklist.docx">API Checklist</a>', unsafe_allow_html=True)
+    
     st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/api-governance-model/?id=contact-us" class="sidebar-link">Ask API Community</a>', unsafe_allow_html=True)
 
 
