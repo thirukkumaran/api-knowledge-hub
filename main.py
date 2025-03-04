@@ -258,7 +258,7 @@ def main():
 
     st.sidebar.markdown("API Tools & Support")
     st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/data-provisioning-standards-dps-linter/" class="sidebar-link">API Linter</a>', unsafe_allow_html=True)
-    st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/data-provisioning-standards-dps-linter/" class="sidebar-link">API Questionaries</a>', unsafe_allow_html=True)
+    st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/data-provisioning-standards-dps-linter/" class="sidebar-link">API Checklist</a>', unsafe_allow_html=True)
     st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/api-governance-model/?id=contact-us" class="sidebar-link">Ask API Community</a>', unsafe_allow_html=True)
 
 
