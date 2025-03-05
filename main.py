@@ -245,6 +245,7 @@ def main():
     st.sidebar.markdown("API Management")
     st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/api-governance-model/pages/8-lifecycle" class="sidebar-link">API Lifecycle</a>', unsafe_allow_html=True)
     st.sidebar.markdown('<a href="https://www.developer.tech.gov.sg/products/categories/data-and-apis/apex-cloud/overview" class="sidebar-link">APEX Cloud API Gateway</a>', unsafe_allow_html=True)
+    st.sidebar.markdown('<a href="https://api.apex.gov.sg/" class="sidebar-link">Discover WOG APIs</a>', unsafe_allow_html=True)
     
     st.sidebar.markdown("API Design Standards")
     st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/api-governance-model/pages/3-api-design" class="sidebar-link">Design Best Practices</a>', unsafe_allow_html=True)
