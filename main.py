@@ -208,14 +208,16 @@ def main():
         selected_question = st.radio(" ", list(DEFAULT_ANSWERS[selected_role].keys()))
 
     with col2:
-        st.markdown('<h3 class="section-heading">Choose your question</h3>', unsafe_allow_html=True)
-        st.markdown(f"*Current Role: {selected_role}*")
+        st.markdown('<h3 class="section-heading">Ask your question</h3>', unsafe_allow_html=True)
         
-        custom_question = st.text_area("", value=selected_question, height=200)
+        # Include the role in the question box
+        prefixed_question = f"{selected_role}\n\n{selected_question}"
+        custom_question = st.text_area("", value=prefixed_question, height=200)
         
         if st.button("Get Insights"):
             if custom_question:
                 with st.spinner("Generating insights..."):
+                    # Don't prepend the role to the question
                     custom_response = generate_ai_response(custom_question, selected_role)
                     st.session_state.chat_history.append({
                         'question': custom_question,
