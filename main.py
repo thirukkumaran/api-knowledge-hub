@@ -167,7 +167,7 @@ def main():
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     .subtitle {
-        font-size: 4.8rem;
+        font-size: 1.3rem;
         color: #666;
         margin-bottom: 2rem;
         line-height: 2;
@@ -252,16 +252,16 @@ def main():
     st.sidebar.markdown("API Design Standards")
     st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/api-governance-model/pages/3-api-design" class="sidebar-link">Design Best Practices</a>', unsafe_allow_html=True)
     st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/api-governance-model/pages/4-security" class="sidebar-link">Security Best Practices</a>', unsafe_allow_html=True)
+    st.sidebar.markdown('<a href="https://github.com/tohyongcheng/template-backend-express" class="sidebar-link">OpenAPI Templates</a>', unsafe_allow_html=True) 
 
     st.sidebar.markdown("API Development")
     st.sidebar.markdown('<a href="https://medium.com/@thirukkumaran/rapid-prototyping-of-design-first-apis-in-go-601d8833593a" class="sidebar-link">API Design-First Development</a>', unsafe_allow_html=True)
-    st.sidebar.markdown('<a href="https://github.com/tohyongcheng/template-backend-express" class="sidebar-link">OpenAPI Templates</a>', unsafe_allow_html=True)    
+    st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/data-provisioning-standards-dps-linter/" class="sidebar-link">API Linter</a>', unsafe_allow_html=True)   
 
     st.sidebar.markdown("API Testing")
     st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/api-governance-model/pages/5-testing" class="sidebar-link">API Testing</a>', unsafe_allow_html=True)    
 
     st.sidebar.markdown("API Tools & Support")
-    st.sidebar.markdown('<a href="https://docs.developer.tech.gov.sg/docs/data-provisioning-standards-dps-linter/" class="sidebar-link">API Linter</a>', unsafe_allow_html=True)
     
     # Add API checklist as a link that looks like the other sidebar links
     with open('API-checklist.docx', 'rb') as file:
